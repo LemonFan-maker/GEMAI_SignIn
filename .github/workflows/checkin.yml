@@ -1,0 +1,32 @@
+name: Daily Checkin
+
+on:
+  schedule:
+    # 每天 UTC 0:00 执行（北京时间 8:00）
+    - cron: '0 0 * * *'
+  workflow_dispatch: # 支持手动触发
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Run checkin
+        env:
+          CHECKIN_CONFIG: ${{ secrets.CHECKIN_CONFIG }}
+          CI: 'true'
+        run: python checkin.py
