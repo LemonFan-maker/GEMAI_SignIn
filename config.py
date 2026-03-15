@@ -54,7 +54,7 @@ WECHAT_WEBHOOK_KEY = CONFIG.get("webhook_key", "")
 
 
 def mask_email(email):
-    """脱敏邮箱: 459743839@qq.com -> 459***839@qq.com"""
+    """脱敏邮箱: 666***999@example.com"""
     parts = email.split("@")
     if len(parts) != 2:
         return email[:3] + "***"
