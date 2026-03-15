@@ -17,7 +17,16 @@ SCREENSHOT_DIR = Path("screenshots")
 
 # 统一配置: 从单个 JSON 读取所有敏感信息
 # 格式: {"accounts":[{"username":"a@b.com","password":"xxx"}],"webhook_key":"xxx"}
-CONFIG = json.loads(os.environ.get("CHECKIN_CONFIG", "{}"))
+_raw = os.environ.get("CHECKIN_CONFIG", "").strip()
+if not _raw:
+    CONFIG = {}
+else:
+    try:
+        CONFIG = json.loads(_raw)
+    except json.JSONDecodeError as e:
+        print(f"[!] CHECKIN_CONFIG JSON 解析失败: {e}")
+        print(f"[!] 原始值: {_raw[:80]}...")
+        CONFIG = {}
 ACCOUNTS = CONFIG.get("accounts", [])
 WECHAT_WEBHOOK_KEY = CONFIG.get("webhook_key", "")
 
